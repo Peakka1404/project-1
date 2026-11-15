@@ -1,10 +1,11 @@
-import type { NextConfig } from "next";
-
-const nextConfig: NextConfig = {
-  reactStrictMode: true,
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  reactStrictMode: false,
   transpilePackages: [
     "@univerjs/core",
     "@univerjs/design",
+    "@univerjs/docs",
+    "@univerjs/docs-ui",
     "@univerjs/engine-formula",
     "@univerjs/engine-render",
     "@univerjs/sheets",

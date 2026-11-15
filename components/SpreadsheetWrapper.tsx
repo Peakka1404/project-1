@@ -1,14 +1,22 @@
 'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
-import { Univer, UniverInstanceType } from '@univerjs/core';
+import { LocaleType, Tools, Univer, UniverInstanceType } from '@univerjs/core';
 import { defaultTheme } from '@univerjs/design';
+import DesignEnUS from '@univerjs/design/locale/en-US';
 import { UniverRenderEnginePlugin } from '@univerjs/engine-render';
 import { UniverFormulaEnginePlugin } from '@univerjs/engine-formula';
+import { UniverDocsPlugin } from '@univerjs/docs';
+import { UniverDocsUIPlugin } from '@univerjs/docs-ui';
+import DocsUIEnUS from '@univerjs/docs-ui/locale/en-US';
 import { UniverSheetsPlugin } from '@univerjs/sheets';
+import SheetsEnUS from '@univerjs/sheets/locale/en-US';
 import { UniverSheetsUIPlugin } from '@univerjs/sheets-ui';
+import SheetsUIEnUS from '@univerjs/sheets-ui/locale/en-US';
 import { UniverSheetsFormulaPlugin } from '@univerjs/sheets-formula';
+import SheetsFormulaEnUS from '@univerjs/sheets-formula/locale/en-US';
 import { UniverUIPlugin } from '@univerjs/ui';
+import UIEnUS from '@univerjs/ui/locale/en-US';
 import { useSpreadsheetStore } from '@/store/spreadsheetStore';
 
 export function SpreadsheetWrapper() {
@@ -28,6 +36,17 @@ export function SpreadsheetWrapper() {
 
       univer = new Univer({
         theme: defaultTheme,
+        locale: LocaleType.EN_US,
+        locales: {
+          [LocaleType.EN_US]: Tools.deepMerge(
+            DesignEnUS,
+            UIEnUS,
+            DocsUIEnUS,
+            SheetsEnUS,
+            SheetsUIEnUS,
+            SheetsFormulaEnUS
+          ),
+        },
       });
 
       univer.registerPlugin(UniverRenderEnginePlugin);
@@ -35,6 +54,8 @@ export function SpreadsheetWrapper() {
       univer.registerPlugin(UniverUIPlugin, {
         container: containerRef.current,
       });
+      univer.registerPlugin(UniverDocsPlugin);
+      univer.registerPlugin(UniverDocsUIPlugin);
       univer.registerPlugin(UniverSheetsPlugin);
       univer.registerPlugin(UniverSheetsUIPlugin);
       univer.registerPlugin(UniverSheetsFormulaPlugin);
@@ -46,11 +67,13 @@ export function SpreadsheetWrapper() {
     }
 
     return () => {
-      try {
-        univer?.dispose();
-      } catch (disposeErr) {
-        console.error('Failed to dispose Univer:', disposeErr);
-      }
+      setTimeout(() => {
+        try {
+          univer?.dispose();
+        } catch (disposeErr) {
+          console.error('Failed to dispose Univer:', disposeErr);
+        }
+      }, 0);
     };
   }, []);
 
