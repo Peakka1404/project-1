@@ -280,6 +280,7 @@ export interface ISoundController {
    - User or lesson events dispatch position or styling updates (`setMascotPosition`, `setMascotProperties`, `setBubbleProperties`).
    - `MascotOverlayLayer` reactively recalculates CSS `translate3d` transforms for the mascot and offset-anchored text bubble.
    - All transform updates are isolated to the `z-40` overlay layer, causing zero reflows in the underlying spreadsheet canvas.
+   - **Drag & viewport containment:** The mascot wrapper is draggable via pointer events (mouse/pen/touch, pointer capture). `MascotOverlayLayer` measures the viewport and the rendered bubble size, clamps the mascot to `[0, viewport − size]` on both axes (also re-clamping the store on resize), and places the bubble at `mascot + positionOffset`, mirroring it to the opposite side of the mascot when it would overflow horizontally and clamping it vertically so it always stays on screen.
 
 3. **Procedural Speech Sound Dataflow:**
    - Setting speech bubble text with `triggerSpeech = true` (or customizer "Speak" action) invokes `soundController.playSpeech(text, { pitch, speed })`.

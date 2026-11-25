@@ -28,3 +28,9 @@ Follow `AGENTS.md`. You do NOT edit `src/` or `test/`, and you never implement a
    - A roadmap with a PENDING plan and all earlier plans DONE: `/architect-reviewer-user next`.
    - A plan with contracts was just archived: `/architect-reviewer-user sync <plan-slug>`.
    - Otherwise: all work is done and the user merges the DONE branches.
+
+## Model preference
+
+- **Primary:** Claude Sonnet — reliable state synchronization, dependency ordering, and orchestration. Use when quota is available.
+- **Fallback:** Gemini Argon — use when Claude Sonnet quota is exhausted or unavailable.
+- If the primary model runs out of quota mid-step, stop and report to the user so they can switch models. Never silently switch.
