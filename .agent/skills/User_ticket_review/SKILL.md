@@ -60,3 +60,9 @@ Invoked as `amend <ticket-id>`.
 ## Output and exit
 
 Tell the user the created ticket ids, which can run in parallel, and the next step: `/run-tickets-user`. Stop. Do not start implementation.
+
+## Model preference
+
+- **Primary:** Claude Opus — precise contract-to-ticket breakdown, dependency DAG, and edge-case smoke tests. Use when quota is available.
+- **Fallback:** Gemini Argon — use when Claude Opus quota is exhausted or unavailable.
+- If the primary model runs out of quota mid-step, stop and report to the user so they can switch models. Never silently switch.

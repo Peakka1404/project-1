@@ -2,18 +2,18 @@
 
 The pipeline runs in strict order. Each step's agent, model, and output are listed below.
 
-| Step | Agent                  | Model Preference                                           | Input                          | Output                             |
-|------|------------------------|------------------------------------------------------------|--------------------------------|------------------------------------|
-| 1    | `planner-user`         | Claude Sonnet (primary), Claude Opus (fallback)            | User request + ARCHITECTURE.md | `.tasks/draft_plan.md`             |
+| Step | Agent                  | Model Preference                                                | Input                          | Output                             |
+|------|------------------------|-----------------------------------------------------------------|--------------------------------|------------------------------------|
+| 1    | `planner-user`         | Claude Sonnet (primary), Claude Opus (fallback)                 | User request + ARCHITECTURE.md | `.tasks/draft_plan.md`             |
 | 2    | `architect-reviewer-user` | Claude Opus (primary, if quota available), Gemini (fallback) | `draft_plan.md` + ARCHITECTURE.md | `.tasks/review-<plan>.md` (APPROVED) |
-| 3    | `ticket-writer-user`   | Gemini only                                                | Approved plan                  | `.tasks/T-xxx.md` + index rows     |
-| 4    | `run-tickets-user`     | Gemini only                                                | `.tasks/index.md`              | Orchestration, archival            |
-| 5    | `coder-agent-user`     | Gemini only                                                | Ticket file                    | Code changes, Implementation Report|
-| 6    | `tester-user`          | Gemini only                                                | Ticket (deep_test: true)       | Test Report                        |
-| 7    | `gatekeeper-user`      | Gemini only                                                | Ticket (REVIEW/TESTING)        | Git commit or CHANGES_REQUESTED    |
+| 3    | `ticket-writer-user`   | Claude Opus (primary, if quota available), Gemini Argon (fallback) | Approved plan               | `.tasks/T-xxx.md` + index rows     |
+| 4    | `run-tickets-user`     | Claude Sonnet (primary, if quota available), Gemini Argon (fallback) | `.tasks/index.md`          | Orchestration, archival            |
+| 5    | `coder-agent-user`     | Gemini only                                                     | Ticket file                    | Code changes, Implementation Report|
+| 6    | `tester-user`          | Gemini only                                                     | Ticket (deep_test: true)       | Test Report                        |
+| 7    | `gatekeeper-user`      | Gemini only                                                     | Ticket (REVIEW/TESTING)        | Git commit or CHANGES_REQUESTED    |
 
 **Rules:**
-- Steps 3–7 MUST use Gemini. Do NOT use Claude for ticket writing, orchestration, coding, testing, or gatekeeping.
+- Steps 5–7 MUST use Gemini. Do NOT use Claude for coding, testing, or gatekeeping.
 - The user may override model choice explicitly; that override takes precedence.
 - If the primary model runs out of quota mid-step, the agent MUST stop, report the quota issue, and let the user switch to the fallback model. Never silently switch models.
 
